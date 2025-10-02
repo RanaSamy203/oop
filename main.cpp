@@ -1,3 +1,5 @@
+// - Mazen Nasser Mohamed – ID: 20240453
+// ✅ Implemented the Grayscale filter and the Lighten/Darken filter
 // - Rana Samy Rizk – ID: 20242126
 // ✅ Implemented the Invert Colors filter and the Rotate filter (90°, 180°, 270°)
 
@@ -6,6 +8,21 @@
 #include <string>
 #include <limits>
 using namespace std;
+// filter 1
+void gray_scale(Image &image) {
+    for (int i = 0; i < image.width; i++) {
+        for (int j = 0; j < image.height; j++) {
+            int avg = 0;
+            for (int k = 0; k < image.channels; k++) {
+                avg += image(i, j, k);
+            }
+            avg /= image.channels;
+            for (int k = 0; k < image.channels; k++) {
+                image(i, j, k) = avg;
+            }
+        }
+    }
+}
 
 // filter 3
 Image invertColors(const Image &img) {
@@ -49,6 +66,19 @@ void rotate270(Image &img) {
                 rotated(img.height - 1 - j, i, k) = img(i, j, k);
     img = rotated;
 }
+// filter 7
+void LightDark(Image &img, float factor) {
+    for (int x = 0; x < img.width; x++) {
+        for (int y = 0; y < img.height; y++) {
+            for (int z = 0; z < img.channels; z++) {
+                int value = static_cast<int>(img(x, y, z) * factor);
+                if (value > 255) value = 255;
+                if (value < 0) value = 0;
+                img(x, y, z) = static_cast<unsigned char>(value);
+            }
+        }
+    }
+}
 
 int main() {
     string filename;
@@ -65,8 +95,10 @@ int main() {
         cout << "\nmenu\n";
         cout << "choose a filter to apply or 0 to exit:\n";
         cout << "0- Exit\n";
+        cout << "1- Grayscale\n";
         cout<<"3- Invert Image\n";
         cout<<"6- Rotate Image\n";
+        cout << "7- Lighten/Darken\n";
 
         int choice;
         cin >> choice;
@@ -75,6 +107,21 @@ int main() {
             case 0:
                 cout << "Exiting the program.\n";
                 return 0;
+            case 1: {
+                Image img = originalImg;
+                gray_scale(img);
+                cout << "Grayscale filter applied.\n";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                    img.saveImage(saveFile);
+                    cout << "Image saved as " << saveFile << "\n";
+                }
+                break;
+            }
+
 
             case 5:{
                 Image img = originalImg;
@@ -105,6 +152,23 @@ int main() {
                 } else if (angle == 270) {
                     rotate270(img); 
                 }
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                    img.saveImage(saveFile);
+                    cout << "Image saved as " << saveFile << "\n";
+                }
+                break;
+            }
+             case 7: {
+                Image img = originalImg;
+                float factor;
+                cout << "Enter factor (e.g. >1 to lighten, <1 to darken): ";
+                cin >> factor;
+                LightDark(img, factor);
+                cout << "Lighten/Darken filter applied.\n";
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 string saveFile;
                 cout << "Enter filename to save the image or press Enter to skip: ";
