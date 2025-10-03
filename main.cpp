@@ -9,6 +9,7 @@
 #include <string>
 #include <limits>
 using namespace std;
+
 // filter 1
 void gray_scale(Image &image) {
     for (int i = 0; i < image.width; i++) {
@@ -20,6 +21,23 @@ void gray_scale(Image &image) {
             avg /= image.channels;
             for (int k = 0; k < image.channels; k++) {
                 image(i, j, k) = avg;
+            }
+        }
+    }
+}
+
+
+//Filter 2
+void BandW(Image &img){
+    for (int x = 0; x < img.width; x++) {
+        for (int y = 0; y < img.height; y++) {
+            int r = img(x, y, 0);
+            int g = img(x, y, 1);
+            int b = img(x, y, 2);
+            double gray = 0.3 * r + 0.59 * g + 0.11 * b;
+            unsigned char bw = (gray >= 128) ? 255 : 0;
+            for (int z = 0; z < img.channels; z++) {
+                img(x, y, z) = bw;
             }
         }
     }
@@ -38,6 +56,30 @@ Image invertColors(const Image &img) {
     return inverted;
 }
 
+// Filter 5
+void flipH(Image &img){
+    for (int x = 0; x < img.width / 2; x++) {
+        for (int y = 0; y < img.height; y++) {
+            for (int z = 0; z < img.channels; z++) {
+                unsigned char temp = img(x, y, z);
+                img(x, y, z) = img(img.width - 1 - x, y, z);
+                img(img.width - 1 - x, y, z) = temp;
+            }
+        }
+    }
+}
+void flipV(Image &img){
+    for (int x = 0; x < img.width; x++) {
+        for (int y = 0; y < img.height / 2; y++) {
+            for (int z = 0; z < img.channels; z++) {
+                unsigned char temp = img(x, y, z);
+                img(x, y, z) = img(x, img.height - 1 - y, z);
+                img(x, img.height - 1 - y, z) = temp;
+            }
+        }
+    }
+}
+
 // filter 6
 void rotate90(Image &img) {
     Image rotated(img.height, img.width);
@@ -47,8 +89,6 @@ void rotate90(Image &img) {
                 rotated(j, img.width - 1 - i, k) = img(i, j, k);
     img = rotated;
 }
-
-
 void rotate180(Image &img) {
     Image rotated(img.width, img.height);
     for (int i = 0; i < img.width; ++i)
@@ -57,8 +97,6 @@ void rotate180(Image &img) {
                 rotated(img.width - 1 - i, img.height - 1 - j, k) = img(i, j, k);
     img = rotated;
 }
-
-
 void rotate270(Image &img) {
     Image rotated(img.height, img.width);
     for (int i = 0; i < img.width; ++i)
@@ -67,6 +105,7 @@ void rotate270(Image &img) {
                 rotated(img.height - 1 - j, i, k) = img(i, j, k);
     img = rotated;
 }
+
 // filter 7
 void LightDark(Image &img, float factor) {
     for (int x = 0; x < img.width; x++) {
@@ -95,11 +134,13 @@ int main() {
     {
         cout << "\nmenu\n";
         cout << "choose a filter to apply or 0 to exit:\n";
-        cout << "0- Exit\n";
-        cout << "1- Grayscale\n";
-        cout<<"3- Invert Image\n";
-        cout<<"6- Rotate Image\n";
-        cout << "7- Lighten/Darken\n";
+        cout << "0-Exit\n";
+        cout << "1-Grayscale\n";
+        cout<< "2-Black and White\n";
+        cout<<"3-Invert Image\n";
+        cout<<"5-Flipping Image\n";
+        cout<<"6-Rotate Image\n";
+        cout << "7-Lighten/Darken\n";
 
         int choice;
         cin >> choice;
@@ -122,9 +163,23 @@ int main() {
                 }
                 break;
             }
+            case 2: {
+                Image img = originalImg;
+                BandW(img);
+                cout << "Black and White filter applied.\n";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                    img.saveImage(saveFile);
+                    cout << "Image saved as " << saveFile << "\n";
+                }
+                break;
+            }
 
 
-            case 5:{
+            case 3:{
                 Image img = originalImg;
                 img = invertColors(img);
                 cout << "Invert Image filter applied.\n";
@@ -136,8 +191,33 @@ int main() {
                     img.saveImage(saveFile);
                     cout << "Image saved as " << saveFile << "\n";
                 }
+                break; 
+            }
+            case 5: {
+                Image img = originalImg;
+                cout << "if u want to flip horizontal press 1, if u want to flip vertical press 2\n";
+                int whichflip;
+                cin >> whichflip;
+
+                if (whichflip == 1) {
+                    flipH(img);
+                    cout << "Image flipped horizontally.\n";
+                } else if (whichflip == 2) {
+                    flipV(img);
+                    cout << "Image flipped vertically.\n";
+                } else {
+                    cout << "Invalid choice for flip direction.\n";
+                }
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                    img.saveImage(saveFile);
+                    cout << "Image saved as " << saveFile << "\n";
+                }
                 break;
-               
             }
 
             
