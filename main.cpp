@@ -2,7 +2,8 @@
 // ✅ Implemented the Grayscale filter and the Lighten/Darken filter
 // - Rana Samy Rizk – ID: 20242126
 // ✅ Implemented the Invert Colors filter and the Rotate filter (90°, 180°, 270°)
-
+// - Mohamed Haitham Mohamed - ID: 20240538
+// ✅ Implemented Black and White filter, the flipping filter, and the menu
 #include"Image_Class.h"
 #include <iostream>
 #include <string>
