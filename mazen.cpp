@@ -84,6 +84,17 @@ Image detect_image_edges(Image &image) {
     }
     return edges;
 }
+void BandW(Image &img) {
+    for (int x = 0; x < img.width; x++) {
+        for (int y = 0; y < img.height; y++) {
+            int gray = img(x, y, 0);
+            int bw = (gray > 128) ? 255 : 0;
+            for (int k = 0; k < img.channels; k++) {
+                img(x, y, k) = bw;
+            }
+        }
+    }
+}
 
 int main() {
     string filename;
@@ -161,5 +172,6 @@ int main() {
     }
     return 0;
 }
+
 
 
