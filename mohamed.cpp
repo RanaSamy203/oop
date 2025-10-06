@@ -4,7 +4,7 @@
 #include <limits>
 using namespace std;
 
-void BandW(Image &img){
+void BandW(Image &img) {
     for (int x = 0; x < img.width; x++) {
         for (int y = 0; y < img.height; y++) {
             int r = img(x, y, 0);
@@ -19,7 +19,7 @@ void BandW(Image &img){
     }
 }
 
-void flipH(Image &img){
+void flipH(Image &img) {
     for (int x = 0; x < img.width / 2; x++) {
         for (int y = 0; y < img.height; y++) {
             for (int z = 0; z < img.channels; z++) {
@@ -31,7 +31,7 @@ void flipH(Image &img){
     }
 }
 
-void flipV(Image &img){
+void flipV(Image &img) {
     for (int x = 0; x < img.width; x++) {
         for (int y = 0; y < img.height / 2; y++) {
             for (int z = 0; z < img.channels; z++) {
@@ -41,6 +41,29 @@ void flipV(Image &img){
             }
         }
     }
+}
+
+void crop(Image &img, int startX, int startY, int cropWidth, int cropHeight) {
+    if (startX < 0 || startY < 0) {
+        cout << "Starting point cannot be negative." << endl;
+        return;
+    }
+    if (cropWidth > img.width - startX || cropHeight > img.height - startY) {
+        cout << "Crop size is too large for the given starting point." << endl;
+        return;
+    }
+
+    Image cropped(cropWidth, cropHeight);
+
+    for (int x = 0; x < cropWidth; x++) {
+        for (int y = 0; y < cropHeight; y++) {
+            for (int z = 0; z < img.channels; z++) {
+                cropped(x, y, z) = img(x + startX, y + startY, z);
+            }
+        }
+    }
+
+    img = cropped;
 }
 
 int main() {
@@ -60,6 +83,8 @@ int main() {
         cout << "0- Exit\n";
         cout << "1- Black and White\n";
         cout << "2- Flip\n";
+        cout << "3- Crop Image\n";
+        cout << "4- resize Image\n";
 
         int choice;
         cin >> choice;
@@ -107,6 +132,54 @@ int main() {
                 if (!saveFile.empty()) {
                     img.saveImage(saveFile);
                     cout << "Image saved as " << saveFile << "\n";
+                }
+                break;
+            }
+
+            case 3: {
+                Image img = originalImg;
+
+                int startX, startY, cropWidth, cropHeight;
+                cout << "Enter starting X coordinate: ";
+                cin >> startX;
+                cout << "Enter starting Y coordinate: ";
+                cin >> startY;
+                cout << "Enter width of crop: ";
+                cin >> cropWidth;
+                cout << "Enter height of crop: ";
+                cin >> cropHeight;
+
+                crop(img, startX, startY, cropWidth, cropHeight);
+                cout << "Image cropped.\n";
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                    img.saveImage(saveFile);
+                    cout << "Image saved as " << saveFile << "\n";
+                }
+                break;
+            }
+            case 4: {
+                Image img = originalImg;
+                int newWidth, newHeight;
+                cout << "Enter new width: ";
+                cin >> newWidth;
+                cout << "Enter new height: ";
+                cin >> newHeight;
+
+                resizeImage(img, newWidth, newHeight);
+                cout << "Image resized.\n";
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                img.saveImage(saveFile);
+                cout << "Image saved as " << saveFile << "\n";
                 }
                 break;
             }
