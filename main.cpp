@@ -190,6 +190,29 @@ void LightDark(Image &img, float factor)
         }
     }
 }
+// filter 8
+void crop(Image &img, int startX, int startY, int cropWidth, int cropHeight) {
+    if (startX < 0 || startY < 0) {
+        cout << "Starting point cannot be negative." << endl;
+        return;
+    }
+    if (cropWidth > img.width - startX || cropHeight > img.height - startY) {
+        cout << "Crop size is too large for the given starting point." << endl;
+        return;
+    }
+
+    Image cropped(cropWidth, cropHeight);
+
+    for (int x = 0; x < cropWidth; x++) {
+        for (int y = 0; y < cropHeight; y++) {
+            for (int z = 0; z < img.channels; z++) {
+                cropped(x, y, z) = img(x + startX, y + startY, z);
+            }
+        }
+    }
+
+    img = cropped;
+}
 
 // filter 9
 void addWhiteFrame(Image &image, int thickness, string style)
@@ -253,6 +276,26 @@ Image detect_image_edges(Image &image) {
     }
 
     return edges;
+}
+//filter 11
+void resizeImage(Image &img, int newWidth, int newHeight) {
+    Image resized(newWidth, newHeight);
+
+    // Calculate the ratio between old and new dimensions
+    float xRatio = (float)img.width / newWidth;
+    float yRatio = (float)img.height / newHeight;
+
+    for (int x = 0; x < newWidth; x++) {
+        for (int y = 0; y < newHeight; y++) {
+            int origX = int(x * xRatio);
+            int origY = int(y * yRatio);
+            for (int z = 0; z < img.channels; z++) {
+                resized(x, y, z) = img(origX, origY, z);
+            }
+        }
+    }
+
+    img = resized;
 }
 
 // filter 12
@@ -319,8 +362,10 @@ int main()
         cout << "5-Flipping Image\n";
         cout << "6-Rotate Image\n";
         cout << "7-Lighten/Darken\n";
+         cout << "8- Crop Image\n";
         cout << "9- Blur Images\n";
-         cout << "10- Detect Image Edges\n";
+        cout << "10- Detect Image Edges\n";
+         cout << "11- Resize Image\n";
         cout << "12- Adding a Frame to the Picture\n";
 
         int choice;
@@ -477,6 +522,33 @@ int main()
             }
             break;
         }
+        case 8: {
+                Image img = originalImg;
+
+                int startX, startY, cropWidth, cropHeight;
+                cout << "Enter starting X coordinate: ";
+                cin >> startX;
+                cout << "Enter starting Y coordinate: ";
+                cin >> startY;
+                cout << "Enter width of crop: ";
+                cin >> cropWidth;
+                cout << "Enter height of crop: ";
+                cin >> cropHeight;
+
+                crop(img, startX, startY, cropWidth, cropHeight);
+                cout << "Image cropped.\n";
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                    img.saveImage(saveFile);
+                    cout << "Image saved as " << saveFile << "\n";
+                }
+                break;
+            }
+        
         case 9:
         {
             int blurLevel;
@@ -508,6 +580,28 @@ int main()
                 }
                 break;
             }
+         case 11: {
+                Image img = originalImg;
+                int newWidth, newHeight;
+                cout << "Enter new width: ";
+                cin >> newWidth;
+                cout << "Enter new height: ";
+                cin >> newHeight;
+
+                resizeImage(img, newWidth, newHeight);
+                cout << "Image resized.\n";
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                string saveFile;
+                cout << "Enter filename to save the image or press Enter to skip: ";
+                getline(cin, saveFile);
+                if (!saveFile.empty()) {
+                img.saveImage(saveFile);
+                cout << "Image saved as " << saveFile << "\n";
+                }
+                break;
+            }
+
         case 12:
         {
             int thickness;
