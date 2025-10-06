@@ -66,6 +66,27 @@ void crop(Image &img, int startX, int startY, int cropWidth, int cropHeight) {
     img = cropped;
 }
 
+void resizeImage(Image &img, int newWidth, int newHeight) {
+    Image resized(newWidth, newHeight);
+
+    // Calculate the ratio between old and new dimensions
+    float xRatio = (float)img.width / newWidth;
+    float yRatio = (float)img.height / newHeight;
+
+    for (int x = 0; x < newWidth; x++) {
+        for (int y = 0; y < newHeight; y++) {
+            int origX = int(x * xRatio);
+            int origY = int(y * yRatio);
+            for (int z = 0; z < img.channels; z++) {
+                resized(x, y, z) = img(origX, origY, z);
+            }
+        }
+    }
+
+    img = resized;
+}
+
+
 int main() {
     string filename;
     cout << "Enter the filename of the image: ";
@@ -84,7 +105,7 @@ int main() {
         cout << "1- Black and White\n";
         cout << "2- Flip\n";
         cout << "3- Crop Image\n";
-        cout << "4- resize Image\n";
+        cout << "4- Resize Image\n";
 
         int choice;
         cin >> choice;
@@ -192,3 +213,4 @@ int main() {
 
     return 0;
 }
+
