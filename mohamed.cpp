@@ -70,7 +70,6 @@ void crop(Image &img, int startX, int startY, int cropWidth, int cropHeight) {
 void resizeImage(Image &img, int newWidth, int newHeight) {
     Image resized(newWidth, newHeight);
 
-    // Calculate the ratio between old and new dimensions
     float xRatio = (float)img.width / newWidth;
     float yRatio = (float)img.height / newHeight;
 
@@ -214,5 +213,6 @@ int main() {
 
     return 0;
 }
+
 
 
