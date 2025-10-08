@@ -1,10 +1,10 @@
 // - Mazen Nasser Mohamed – ID: 20240453
-// ✅ Implemented the Grayscale filter and the Lighten/Darken filter and the Merge Images filter and Detect Image Edges filter
+// ✅ Implemented the Grayscale filter, the Lighten/Darken filter, the Merge Images filter, and Detect Image Edges filter
 // - Rana Samy Rizk – ID: 20242126
-// ✅ Implemented the Invert Colors filter and the Rotate filter (90°, 180°, 270°) 
-// ✅  and the Blur Images filter and the Adding a Frame to the Picture filter.
+// ✅ Implemented the Invert Colors filter, the Rotate filter (90°, 180°, 270°), the Blur Images filter, and the Adding a Frame to the Picture filter.
 // - Mohamed Haitham Mohamed - ID: 20240538
-// ✅ Implemented Black and White filter, the flipping filter,Crop Images filter,Resizing Images filter and the menu
+// ✅ Implemented Black and White filter, the flipping filter, Crop Images filter,Resizing Images filter and the menu
+
 #include "Image_Class.h"
 #include <iostream>
 #include <string>
@@ -280,7 +280,6 @@ Image detect_image_edges(Image &image) {
 void resizeImage(Image &img, int newWidth, int newHeight) {
     Image resized(newWidth, newHeight);
 
-    // Calculate the ratio between old and new dimensions
     float xRatio = (float)img.width / newWidth;
     float yRatio = (float)img.height / newHeight;
 
@@ -357,14 +356,14 @@ int main()
         cout << "1-Grayscale\n";
         cout << "2-Black and White\n";
         cout << "3-Invert Image\n";
-         cout << "4- Merge Images\n"; 
+        cout << "4- Merge Images\n"; 
         cout << "5-Flipping Image\n";
         cout << "6-Rotate Image\n";
         cout << "7-Lighten/Darken\n";
-         cout << "8- Crop Image\n";
+        cout << "8- Crop Image\n";
         cout << "9- Blur Images\n";
         cout << "10- Detect Image Edges\n";
-         cout << "11- Resize Image\n";
+        cout << "11- Resize Image\n";
         cout << "12- Adding a Frame to the Picture\n";
 
         int choice;
