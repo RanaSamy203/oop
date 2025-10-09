@@ -3,8 +3,10 @@
 // - Rana Samy Rizk – ID: 20242126
 // ✅ Implemented the Invert Colors filter, the Rotate filter (90°, 180°, 270°), the Blur Images filter, and the Adding a Frame to the Picture filter.
 // - Mohamed Haitham Mohamed - ID: 20240538
-// ✅ Implemented Black and White filter, the flipping filter, Crop Images filter,Resizing Images filter and the menu
-
+// ✅ Implemented Black and White filter, the flipping filter, Crop Images filter,Resizing Images filter and the menu.
+// The Decomunt: https://drive.google.com/file/d/1fDY71V5-3DQYTJe0nitPXpoI6pMBJmUq/view?usp=drive_link
+// The Rebo: https://github.com/RanaSamy203/oop
+// the Video:https://drive.google.com/file/d/18wdUEBkMMgYvV4SFr46IaSZg0ghl-lW0/view?usp=sharing 
 #include "Image_Class.h"
 #include <iostream>
 #include <string>
